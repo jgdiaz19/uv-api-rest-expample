@@ -1,17 +1,36 @@
+const { matchedData } = require("express-validator");
 const { tracksModel } = require("../models");
+const { handleHttpError } = require("../utils/handleError");
+const { systemMessages } = require("../config/systemMessages");
 
 const getItems = async (req, res) => {
-  const data = await tracksModel.find({});
-  res.send({ data });
+  try {
+    const data = await tracksModel.find({});
+    res.send({ data });
+  } catch (e) {
+    handleHttpError(res, {
+      userError: systemMessages.genericError,
+      systemError: e.toString(),
+    });
+  }
 };
 
-const getItem = (req, res) => {};
+const getItem = async (req, res) => {
+  try {
+  } catch (error) {}
+};
 
 const createItems = async (req, res) => {
-  const { body } = req;
-  console.log(body);
-  const data = await tracksModel.create(body);
-  res.send(data);
+  try {
+    const body  = matchedData(req); //--> Realiza una limiieza del body de la peticion
+    const data = await tracksModel.create(body);
+    res.send({data});
+  } catch (e) {
+    handleHttpError(res, {
+      userError: systemMessages.genericError,
+      systemError: e.toString(),
+    });
+  }
 };
 
 const updateItems = (req, res) => {};
